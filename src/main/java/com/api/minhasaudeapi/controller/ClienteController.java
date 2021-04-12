@@ -2,6 +2,7 @@ package com.api.minhasaudeapi.controller;
 
 import com.api.minhasaudeapi.model.Cliente;
 import com.api.minhasaudeapi.repository.ClienteRepository;
+import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -15,14 +16,20 @@ public class ClienteController {
     @Autowired
     private ClienteRepository clienteRepository;
 
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Cliente Add(@RequestBody Cliente cliente){
+        try {
+            return  clienteRepository.save(cliente);
+        }catch(HibernateException e){
+            return null;
+        }
+        }
+
     @GetMapping
     public List<Cliente> List(){
         return clienteRepository.findAll();
     }
-
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Cliente Add(@RequestBody Cliente cliente){return  clienteRepository.save(cliente);}
 
     @GetMapping("/{cpf}")
     public Cliente FindByCPF(@PathVariable String cpf){
@@ -44,6 +51,10 @@ public class ClienteController {
         return clienteRepository.findByNascimentoIsAfter(data);
     }
 
-//    @DeleteMapping("/{cpf}")
-//    public  Cliente RemoveByCpf(@PathVariable String cpf){return clienteRepository.deleteByCpf(cpf); }
+    @DeleteMapping("/delete/{cpf}")
+    public void RemoveByCpf(@PathVariable String cpf){
+        Cliente cliente = clienteRepository.findByCpf(cpf);
+        clienteRepository.deleteById(cliente.getId());
+    }
+//    @RequestHeader("cpf")
 }

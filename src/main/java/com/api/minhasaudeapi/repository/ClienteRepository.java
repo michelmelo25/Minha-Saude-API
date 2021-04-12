@@ -15,5 +15,6 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 
     List<Cliente> findByNascimentoIsAfter(String data);
 
-    Cliente deleteByCpf(String cpf);
+//    Long deleteByCpf(String cpf);
+
 }
