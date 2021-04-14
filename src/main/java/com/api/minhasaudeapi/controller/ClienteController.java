@@ -18,13 +18,14 @@ public class ClienteController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cliente Add(@RequestBody Cliente cliente){
-        try {
+    public Cliente Add(@RequestBody Cliente cliente) {
+        try{
             return  clienteRepository.save(cliente);
-        }catch(HibernateException e){
-            return null;
+        }catch (HibernateException e){
+            throw  e;
         }
-        }
+
+    }
 
     @GetMapping
     public List<Cliente> List(){
@@ -55,6 +56,11 @@ public class ClienteController {
     public void RemoveByCpf(@PathVariable String cpf){
         Cliente cliente = clienteRepository.findByCpf(cpf);
         clienteRepository.deleteById(cliente.getId());
+    }
+
+    @PutMapping("/atualizar")
+    public Cliente Atualizar(@RequestBody Cliente cliente){
+        return clienteRepository.save(cliente);
     }
 //    @RequestHeader("cpf")
 }
